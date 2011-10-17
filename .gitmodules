@@ -4,3 +4,6 @@
 [submodule "plugins/Html5"]
 	path = plugins/Html5
 	url = git@github.com:westernmagic/html5-boilerplate.git
+[submodule "plugins/AssetCompress"]
+	path = plugins/AssetCompress
+	url = git://github.com/markstory/asset_compress.git
