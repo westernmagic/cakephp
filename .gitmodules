@@ -1,0 +1,6 @@
+[submodule "plugins/GithubButtons"]
+	path = plugins/GithubButtons
+	url = git@github.com:westernmagic/css3-github-buttons.git
+[submodule "plugins/Html5"]
+	path = plugins/Html5
+	url = git@github.com:westernmagic/html5-boilerplate.git
