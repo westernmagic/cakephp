@@ -24,7 +24,7 @@ App::uses('Debugger', 'Utility');
 	<p>For updates and important announcements, visit http://cakefest.org</p>
 </iframe>
 <h2><?php echo __d('cake_dev', 'Release Notes for CakePHP %s.', Configure::version()); ?></h2>
-<a href="http://cakephp.org/changelogs/2.0.5"><?php echo __d('cake_dev', 'Read the changelog'); ?> </a>
+<a href="http://cakephp.org/changelogs/2.0.6"><?php echo __d('cake_dev', 'Read the changelog'); ?> </a>
 <?php
 if (Configure::read('debug') > 0):
 	Debugger::checkSecurityKeys();
@@ -37,13 +37,13 @@ endif;
 </p>
 <p>
 <?php
-	if (version_compare(PHP_VERSION, '5.2.6', '>=')):
+	if (version_compare(PHP_VERSION, '5.2.8', '>=')):
 		echo '<span class="notice success">';
-			echo __d('cake_dev', 'Your version of PHP is 5.2.6 or higher.');
+			echo __d('cake_dev', 'Your version of PHP is 5.2.8 or higher.');
 		echo '</span>';
 	else:
 		echo '<span class="notice">';
-			echo __d('cake_dev', 'Your version of PHP is too low. You need PHP 5.2.6 or higher to use CakePHP.');
+			echo __d('cake_dev', 'Your version of PHP is too low. You need PHP 5.2.8 or higher to use CakePHP.');
 		echo '</span>';
 	endif;
 ?>
@@ -119,9 +119,9 @@ if (isset($filePresent)):
 	App::uses('Validation', 'Utility');
 	if (!Validation::alphaNumeric('cakephp')) {
 		echo '<p><span class="notice">';
-		__d('cake_dev', 'PCRE has not been compiled with Unicode support.');
-		echo '<br/>';
-		__d('cake_dev', 'Recompile PCRE with Unicode support by adding <code>--enable-unicode-properties</code> when configuring');
+			echo __d('cake_dev', 'PCRE has not been compiled with Unicode support.');
+			echo '<br/>';
+			echo __d('cake_dev', 'Recompile PCRE with Unicode support by adding <code>--enable-unicode-properties</code> when configuring');
 		echo '</span></p>';
 	}
 ?>

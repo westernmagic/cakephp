@@ -73,6 +73,7 @@ class HtmlHelper extends AppHelper {
 		'tag' => '<%s%s>%s</%s>',
 		'tagstart' => '<%s%s>',
 		'tagend' => '</%s>',
+		'tagselfclosing' => '<%s%s/>',
 		'para' => '<p%s>%s</p>',
 		'parastart' => '<p%s>',
 		'label' => '<label for="%s"%s>%s</label>',
@@ -459,7 +460,7 @@ class HtmlHelper extends AppHelper {
  *
  * Add the script file to the `$scripts_for_layout` layout var:
  *
- * `$this->Html->script('styles.js', null, array('inline' => false));`
+ * `$this->Html->script('styles.js', array('inline' => false));`
  *
  * ### Options
  *
