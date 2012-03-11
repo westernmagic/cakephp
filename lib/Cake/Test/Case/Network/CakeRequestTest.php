@@ -793,6 +793,11 @@ class CakeRequestTest extends CakeTestCase {
 
 		$_SERVER['TEST_VAR'] = 'wrong';
 		$this->assertFalse($request->is('compare'), 'Value mis-match failed.');
+		
+		$request->addDetector('compareCamelCase', array('env' => 'TEST_VAR', 'value' => 'foo'));
+
+		$_SERVER['TEST_VAR'] = 'foo';
+		$this->assertTrue($request->is('compareCamelCase'), 'Value match failed.');
 
 		$request->addDetector('banana', array('env' => 'TEST_VAR', 'pattern' => '/^ban.*$/'));
 		$_SERVER['TEST_VAR'] = 'banana';
@@ -808,7 +813,14 @@ class CakeRequestTest extends CakeTestCase {
 		$_SERVER['HTTP_USER_AGENT'] = 'iPhone 3.0';
 		$this->assertTrue($request->isMobile());
 
-		$request->addDetector('callme', array('env' => 'TEST_VAR', 'callback' => array($this, '_detectCallback')));
+		$request->addDetector('callme', array('env' => 'TEST_VAR', 'callback' => array($this, 'detectCallback')));
+
+		$request->addDetector('index', array('param' => 'action', 'value' => 'index'));
+		$request->params['action'] = 'index';
+		$this->assertTrue($request->isIndex());
+
+		$request->params['action'] = 'add';
+		$this->assertFalse($request->isIndex());
 
 		$request->return = true;
 		$this->assertTrue($request->isCallMe());
@@ -822,7 +834,7 @@ class CakeRequestTest extends CakeTestCase {
  *
  * @return void
  */
-	function _detectCallback($request) {
+	public function detectCallback($request) {
 		return $request->return == true;
 	}
 
@@ -1132,6 +1144,7 @@ class CakeRequestTest extends CakeTestCase {
  * @return void
  */
 	public function testGetParamsWithDot() {
+		$_GET = array();
 		$_GET['/posts/index/add_add'] = '';
 		$_SERVER['PHP_SELF'] = '/cake_dev/app/webroot/index.php';
 		$_SERVER['REQUEST_URI'] = '/cake_dev/posts/index/add.add';
@@ -1146,6 +1159,7 @@ class CakeRequestTest extends CakeTestCase {
  * @return void
  */
 	public function testGetParamWithUrlencodedElement() {
+		$_GET = array();
 		$_GET['/posts/add/∂∂'] = '';
 		$_SERVER['PHP_SELF'] = '/cake_dev/app/webroot/index.php';
 		$_SERVER['REQUEST_URI'] = '/cake_dev/posts/add/%E2%88%82%E2%88%82';
@@ -1685,12 +1699,38 @@ XML;
 
 
 /**
+ * Test is('requested') and isRequested()
+ *
+ * @return void
+ */
+	public function testIsRequested() {
+		$request = new CakeRequest('/posts/index');
+		$request->addParams(array(
+			'controller' => 'posts',
+			'action' => 'index',
+			'plugin' => null,
+			'requested' => 1
+		));
+		$this->assertTrue($request->is('requested'));
+		$this->assertTrue($request->isRequested());
+
+		$request = new CakeRequest('/posts/index');
+		$request->addParams(array(
+			'controller' => 'posts',
+			'action' => 'index',
+			'plugin' => null,
+		));
+		$this->assertFalse($request->is('requested'));
+		$this->assertFalse($request->isRequested());
+	}
+
+/**
  * loadEnvironment method
  *
  * @param mixed $env
  * @return void
  */
-	function __loadEnvironment($env) {
+	protected function __loadEnvironment($env) {
 		if (isset($env['App'])) {
 			Configure::write('App', $env['App']);
 		}
