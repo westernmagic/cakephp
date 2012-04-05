@@ -7,6 +7,3 @@
 [submodule "plugins/AssetCompress"]
 	path = plugins/AssetCompress
 	url = git@github.com:westernmagic/asset_compress.git
-[submodule "croogo"]
-	path = croogo
-	url = git://github.com/croogo/croogo.git

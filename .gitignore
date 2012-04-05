@@ -1,8 +1,7 @@
+/*/
+!/app
 /app/Config
 /app/tmp
-/lib/Cake/Console/Templates/skel/tmp/
+!/lib
+/lib/Cake/Console/Templates/skel/tmp
 /vendors
-/build
-/dist
-.DS_Store
-tags
