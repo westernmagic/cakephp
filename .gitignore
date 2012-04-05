@@ -1,7 +1,6 @@
 /*/
 !/app
-/app/Config
-/app/tmp
 !/lib
-/lib/Cake/Console/Templates/skel/tmp
-/vendors
+!/plugins
+!/vendors
+tmp/

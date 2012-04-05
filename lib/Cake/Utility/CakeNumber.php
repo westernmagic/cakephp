@@ -7,12 +7,12 @@
  * PHP 5
  *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       Cake.Utility
  * @since         CakePHP(tm) v 0.10.0.1076
@@ -59,6 +59,13 @@ class CakeNumber {
 		'wholeSymbol' => '', 'wholePosition' => 'before', 'fractionSymbol' => '', 'fractionPosition' => 'after',
 		'zero' => '0', 'places' => 2, 'thousands' => ',', 'decimals' => '.','negative' => '()', 'escape' => true,
 	);
+
+/**
+ * If native number_format() should be used. If >= PHP5.4
+ *
+ * @var boolean
+ */
+	protected static $_numberFormatSupport = null;
 
 /**
  * Formats a number with a level of precision.
@@ -142,12 +149,42 @@ class CakeNumber {
 			extract($options);
 		}
 
-		$out = $before . number_format($number, $places, $decimals, $thousands) . $after;
+		$out = $before . self::_numberFormat($number, $places, $decimals, $thousands) . $after;
 
 		if ($escape) {
 			return h($out);
 		}
 		return $out;
+	}
+
+/**
+ * Alternative number_format() to accommodate multibyte decimals and thousands < PHP 5.4
+ *
+ * @param float $number
+ * @param integer $places
+ * @param string $decimals
+ * @param string $thousands
+ * @return string
+ */
+	protected static function _numberFormat($number, $places = 0, $decimals = '.', $thousands = ',') {
+		if (!isset(self::$_numberFormatSupport)) {
+			self::$_numberFormatSupport = version_compare(PHP_VERSION, '5.4.0', '>=');
+		}
+		if (self::$_numberFormatSupport) {
+			return number_format($number, $places, $decimals, $thousands);
+		}
+		$number = number_format($number, $places, '.', '');
+		$after = '';
+		$foundDecimal = strpos($number, '.');
+		if ($foundDecimal !== false) {
+			$after = substr($number, $foundDecimal);
+			$number = substr($number, 0, $foundDecimal);
+		}
+		while (($foundThousand = preg_replace('/(\d+)(\d\d\d)/', '\1 \2', $number)) != $number) {
+			$number = $foundThousand;
+		}
+		$number .= $after;
+		return strtr($number, array(' ' => $thousands, '.' => $decimals));
 	}
 
 /**
