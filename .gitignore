@@ -6,11 +6,3 @@
 /dist
 .DS_Store
 tags
-
-/*/
-!/app
-/app/Config
-/app/tmp
-!/lib
-/lib/Cake/Console/Templates/skel/tmp
-/vendors
